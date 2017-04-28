@@ -1,0 +1,159 @@
+---
+title: "ESM262Assignment1"
+author: "jpham916"
+date: "April 25, 2017"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+# Find and plot average temperature by month. {#anchor}
+
+```{r}
+  climate = read.table("clim.txt", header = TRUE)
+
+  
+  tempminavg= aggregate(climate$tmin, list(month = climate$month), mean)
+  tempmaxavg= aggregate(climate$tmax, list(month = climate$month), mean)
+  
+  tempcombineavg = (tempmaxavg+tempminavg)/2
+  tempcombineavg
+   boxplot(tempcombineavg$x~tempcombineavg$month,
+  ylab="Average Temperature (C)",
+  xlab="Month", col="orange", main= "Average Monthly Temperatures")
+
+  
+```
+
+# Find and plot average precipitation by month. {#anchor}
+```{r}
+
+   rainavg= aggregate(climate$rain, list(month = climate$month), mean)
+   rainavg
+
+   boxplot(rainavg$x~rainavg$month,
+  ylab="Average Rain (X units)",
+  xlab="Month", col="orange", main="Average Monthly Rain")
+
+  
+
+```
+
+# Find the driest year. {#anchor}
+
+```{r}
+  yearrain= aggregate(climate$rain, list(year = climate$year),  mean)
+   
+   
+   driestyear=which.min(yearrain$x)
+   driestyear = 72
+```
+**Answer is 2013 based from the table. **
+
+**Below is a representation of what an extremely dry year looks like...**
+
+![](http://cdn1.buuteeq.com/upload/18138/andbeyond-sossusvlei-desert-lodge_36.jpg.800x400_0_0_4166.jpg)
+
+
+
+
+
+
+
+# Find the wettest year {#anchor}
+
+
+```{r}
+  
+  wettestyear=which.max(yearrain$x)
+  wettestyear = 41 
+```
+
+**Answer is 1982 based from table.**
+
+**Below is a representation of what an extremely wet year looks like...**
+
+![](http://www.ascentoftheamazon.com/wp-content/uploads/2014/10/IMG_0197.jpg)
+`````
+
+**Subsetting by seasons to find average rain and temperature of each season.**
+
+```{r}
+    
+  wintersubset <- subset(rainavg, month==1 | month==2 | month==12, select=c(month,x))
+  wintersubset
+  mean(wintersubset$x)
+  
+   springsubset <- subset(rainavg, month==3 | month==4 | month==5, select=c(month,x))
+  springsubset
+  mean(springsubset$x)
+  
+   summersubset <- subset(rainavg, month==6 | month==7 | month==8, select=c(month,x))
+summersubset
+  mean(summersubset$x)
+  
+   fallsubset <- subset(rainavg, month==9 | month==10 | month==11, select=c(month,x))
+  fallsubset
+  mean(fallsubset$x)
+  
+  summertempsubset <- subset(tempcombineavg, month==6 | month==7 | month==8, select=c(month,x))
+summertempsubset
+  mean(tempcombineavg$x)
+  
+  
+```
+  
+**Wettest season= Winter**
+**Driest season= Summer**
+
+
+
+# Graph the relationship between winter precipitation and summer temperature. {#anchor}
+
+
+```{r}
+   summertempsubset2 <- subset(climate, month==6 | month==7 | month==8, select=c(year,tmin,tmax))
+  
+   
+  tempminavg2= aggregate(summertempsubset2$tmin, list(year = summertempsubset2$year), mean)
+  
+  
+  tempmaxavg2= aggregate(summertempsubset2$tmax, list(year = summertempsubset2$year), mean)
+  
+  
+   tempcombineavg2 = (tempmaxavg2+tempminavg2)/2
+  
+  
+``` 
+ 
+
+
+
+```{r}
+ winterrainsubset <- subset(climate, month==1 | month==12 | month==2, select=c(year,rain))
+   
+winterrain= aggregate(winterrainsubset$rain, list(year = winterrainsubset$year),  mean)
+
+```
+
+
+```{r}
+plot(tempcombineavg2$x,winterrain$x, ylab= "Rain (cm)", xlab="Temperature (C)", main="Effects of Summer Temperature on Winter Precipitation")  
+```
+Figure 1. Effects of Summer Temperature on Winter Precipitation. Annual Temperature averages of summer months (June, July, August) are plotted against annual precipitation averages from winter data entries of corresponding years.The data does not appear to follow a particular trend and has significant variation. 
+
+```{r}
+
+plot(winterrain$year,winterrain$x, ylab= "Rain (cm)", xlab="Year", main="Average Winter Rain by Year") 
+```
+Figure 2. Average Winter Rain by Year. We seperated the data from the previous plot and only examine winter (December, January, February) precipitation over time. There appears to be a somewhat cyclical patter with peaks approximately at  1955,1970,1980,1995 which can be compared with summer temperature data to study annual water fluxes to the atmosphere that can condense as precipition in winter.
+
+```{r}
+plot(tempcombineavg2$year,tempcombineavg2$x, ylab= "Temperature", xlab="Year", main="Average Summer Temperature by Year") 
+
+```
+
+Figure 3. Average Summer Temperature by Year. Annual temperature averages are increasing over time. In addition to gradually increasing over time, temperature measurements appear to follow a cyclical peak and valley trend with high annual temperature averages spaced about 10 years apart. Temperature data is one metric of many that can be used to predict water and energy fluxes.
+
