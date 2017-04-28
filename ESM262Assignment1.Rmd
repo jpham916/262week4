@@ -2,7 +2,8 @@
 title: "ESM262Assignment1"
 author: "jpham916"
 date: "April 25, 2017"
-output: slidy_presentation
+output: html_document
+  
 ---
 
 ```{r setup, include=TRUE}
