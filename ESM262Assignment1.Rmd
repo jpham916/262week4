@@ -2,7 +2,7 @@
 title: "ESM262Assignment1"
 author: "jpham916"
 date: "April 25, 2017"
-output: pdf_document
+output: html_document
   
 ---
 
